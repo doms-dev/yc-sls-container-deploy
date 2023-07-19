@@ -74,6 +74,9 @@ const createRevision = async (
     },
     concurrency: revisionInputs.concurrency,
     secrets: revisionInputs.secrets,
+    connectivity: {
+      networkId: revisionInputs.networkId,
+    },
   } as any;
 
   if (revisionInputs.provisioned !== undefined) {
@@ -109,6 +112,7 @@ interface IRevisionInputs {
   environment: Environment;
   provisioned: number | undefined;
   secrets: Secret[];
+  networkId: string;
 }
 
 const parseRevisionInputs = (): IRevisionInputs => {
@@ -129,6 +133,7 @@ const parseRevisionInputs = (): IRevisionInputs => {
   const args = argList.length > 0 ? { args: argList } : undefined;
   const environment: Environment = parseEnvironment(core.getMultilineInput('revision-env'));
   const secrets: Secret[] = parseLockboxVariablesMapping(core.getMultilineInput('revision-secrets'));
+  const networkId: string = core.getInput('revision-network-id');
 
   let provisioned = undefined;
 
@@ -150,6 +155,7 @@ const parseRevisionInputs = (): IRevisionInputs => {
     environment,
     provisioned,
     secrets,
+    networkId,
   };
 };
 
